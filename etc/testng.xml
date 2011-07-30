@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="REST Service Integration Tests" verbose="1">
+
+    <!--<test name="Sample Customer Service Tests">-->
+        <!--<classes>-->
+            <!--<class name="com.proofpoint.sampleproject.tests.sample.SampleRESTTests"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <test name="Google Test">
+        <classes>
+            <class name="com.proofpoint.sampleproject.tests.sample.GoogleTest"/>
+        </classes>
+    </test>
+
+</suite>
