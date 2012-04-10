@@ -1,4 +1,4 @@
-package com.proofpoint.sampleproject.factories;
+package com.proofpoint.sampleproject.discovery.factories;
 
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
@@ -12,14 +12,11 @@ public class AsyncHttpClientFactory
 {
     public static AsyncHttpClient getClient()
     {
-        Builder builder = new AsyncHttpClientConfig.Builder();
-        builder.setSSLContext(MySSLSocketFactory.createEasySSLContext());
-        return new AsyncHttpClient(builder.build());
+        return new AsyncHttpClient(getBuilder(120000).build());
     }
 
     public static AsyncHttpClient getClient(String user, String password)
     {
-        Builder builder = new AsyncHttpClientConfig.Builder();
         Realm realm = new RealmBuilder()
                 .setPrincipal(user)
                 .setPassword(password)
@@ -27,9 +24,20 @@ public class AsyncHttpClientFactory
                 .setScheme(AuthScheme.BASIC)
                 .build();
 
-        builder.setSSLContext(MySSLSocketFactory.createEasySSLContext())
+        Builder builder = getBuilder(12000)
+                .setSSLContext(MySSLSocketFactory.createEasySSLContext())
                 .setRealm(realm);
 
         return new AsyncHttpClient(builder.build());
+    }
+
+    protected static Builder getBuilder(int requestTimeoutInMs)
+    {
+        return new AsyncHttpClientConfig.Builder().setRequestTimeoutInMs(requestTimeoutInMs);
+    }
+
+    public static AsyncHttpClient getClient(int requestTimeoutInMs)
+    {
+        return new AsyncHttpClient(getBuilder(requestTimeoutInMs).build());
     }
 }

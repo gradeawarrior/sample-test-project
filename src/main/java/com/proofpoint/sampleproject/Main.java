@@ -1,44 +1,85 @@
 package com.proofpoint.sampleproject;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import com.google.inject.Injector;
+import com.proofpoint.bootstrap.Bootstrap;
+import com.proofpoint.discovery.client.DiscoveryClientConfig;
+import com.proofpoint.discovery.client.DiscoveryModule;
+import com.proofpoint.event.client.HttpEventModule;
+import com.proofpoint.experimental.jmx.JmxHttpModule;
+import com.proofpoint.http.server.HttpServerModule;
+import com.proofpoint.jaxrs.JaxrsModule;
+import com.proofpoint.jmx.JmxModule;
+import com.proofpoint.json.JsonModule;
+import com.proofpoint.log.Logger;
+import com.proofpoint.node.NodeConfig;
+import com.proofpoint.node.NodeModule;
+import com.proofpoint.sampleproject.discovery.factories.DiscoveryTestFactory;
+import com.proofpoint.sampleproject.tests.SampleTest;
 import org.testng.TestListenerAdapter;
 import org.testng.TestNG;
-
+import org.weakref.jmx.guice.MBeanModule;
 
 /**
  * TestNG test launcher
  */
 public class Main
 {
+    private static final Logger log = Logger.get(Main.class);
 
-    private final static Class<?>[] TEST_CLASSES = new Class[]{};
+    private final static Class<?>[] TEST_CLASSES =
+            new Class[]{
+                    DiscoveryTestFactory.class,
+                    SampleTest.class
+            };
+
+    public static Injector injector;
+    public static TestConfigurations configurations;
+    public static URI discoveryUri;
+    public static String environment;
 
     public static void main(String[] args)
-            throws IOException
+            throws Exception
     {
-        BasicConfigurator.configure();
-        Logger.getLogger("com.ning.http.client.providers.netty.NettyAsyncHttpProvider").setLevel(Level.DEBUG);
-        Logger.getLogger("org.slf4j.impl.StaticLoggerBinder").setLevel(Level.DEBUG);
+        Bootstrap app = new Bootstrap(
+                new NodeModule(),
+//                new HttpEventModule(),
+                new JsonModule(),
+                new JaxrsModule(),
+                new HttpServerModule(),
+                new DiscoveryModule(),
+                new MBeanModule(),
+                new JmxModule(),
+                new JmxHttpModule(),
+                new HttpEventModule(),
+                new MainModule()
+        );
+
+        injector = app.strictConfig().initialize();
+        configurations = injector.getInstance(TestConfigurations.class);
+        DiscoveryClientConfig discoveryClientConfig = injector.getInstance(DiscoveryClientConfig.class);
+        NodeConfig nodeConfig = injector.getInstance(NodeConfig.class);
+
+        // Discovery Configs
+        discoveryUri = discoveryClientConfig.getDiscoveryServiceURI();
+        environment = nodeConfig.getEnvironment();
 
         // look for configuration files in etc/testng*.xml
+        File testngFile = new File(configurations.getTestngConfig());
         List<String> testSuites = new ArrayList<String>();
-        File configDir = new File("etc");
-        if (configDir.exists() && configDir.isDirectory()) {
 
-            File[] testSuiteFiles = configDir.listFiles();
-            for (File file : testSuiteFiles) {
-                String fileName = file.getName();
-                if (file.isFile() && fileName.startsWith("testng") && fileName.endsWith(".xml")) {
-                    testSuites.add(file.getAbsolutePath());
-                }
-            }
+        if (testngFile.exists() && testngFile.isFile()) {
+            testSuites.add(testngFile.getAbsolutePath());
+        }
+        else {
+            FileNotFoundException exception = new FileNotFoundException(configurations.getTestngConfig() + " was not found");
+            log.error(exception);
+            throw exception;
         }
 
         // kick off this test suite programatically
@@ -48,7 +89,7 @@ public class Main
             testng.setTestSuites(testSuites);
         }
         else {
-            testng.setDefaultSuiteName("QATests");
+            testng.setDefaultSuiteName("SeleniumTests");
             testng.setTestClasses(TEST_CLASSES);
         }
         // configurable via testng.xml or always hardcode?

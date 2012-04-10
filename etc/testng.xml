@@ -1,16 +1,16 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="REST Service Integration Tests" verbose="1">
+<suite name="Share API Integration Tests" verbose="1" parallel="classes" thread-count="1">
 
-    <!--<test name="Sample Customer Service Tests">-->
-        <!--<classes>-->
-            <!--<class name="com.proofpoint.sampleproject.tests.sample.SampleRESTTests"/>-->
-        <!--</classes>-->
-    <!--</test>-->
-
-    <test name="Google Test">
+    <test name="Discovery">
         <classes>
-            <class name="com.proofpoint.sampleproject.tests.sample.GoogleTest"/>
+            <class name="com.proofpoint.sampleproject.discovery.factories.DiscoveryTestFactory"/>
+        </classes>
+    </test>
+
+    <test name="Sample">
+        <classes>
+            <class name="com.proofpoint.sampleproject.tests.SampleTest"/>
         </classes>
     </test>
 

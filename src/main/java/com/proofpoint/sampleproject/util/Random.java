@@ -17,4 +17,19 @@ public class Random
     {
         return rand.nextInt(ceiling);
     }
+
+    public static String getRandomAlphaNumericString(int length)
+    {
+        String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            sb.append(AB.charAt(rand.nextInt(AB.length())));
+        }
+        return sb.toString();
+    }
+
+    public static String generateRandomEmail(String domain)
+    {
+        return String.format("a%s-%s@%s", getRandomAlphaNumericString(5), getRandomAlphaNumericString(5), domain);
+    }
 }
