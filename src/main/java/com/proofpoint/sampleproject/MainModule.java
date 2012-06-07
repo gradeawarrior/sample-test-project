@@ -3,8 +3,9 @@ package com.proofpoint.sampleproject;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
+import com.ning.http.client.AsyncHttpClient;
 import com.proofpoint.configuration.ConfigurationModule;
-import org.testng.TestNG;
+import com.proofpoint.event.client.HttpEventClientConfig;
 
 import static com.proofpoint.discovery.client.DiscoveryBinder.discoveryBinder;
 
@@ -15,10 +16,13 @@ public class MainModule implements Module
     @Override
     public void configure(Binder binder)
     {
-        binder.bind(TestNG.class).in(Scopes.SINGLETON);
+        binder.bind(AsyncHttpClient.class).in(Scopes.NO_SCOPE);
+        binder.bind(TestManager.class).in(Scopes.SINGLETON);
+        binder.bind(TestResource.class).in(Scopes.SINGLETON);
 
         // Configurations
         ConfigurationModule.bindConfig(binder).to(TestConfigurations.class);
+        ConfigurationModule.bindConfig(binder).to(HttpEventClientConfig.class);
 
         // Discovery Announcement
         discoveryBinder(binder).bindHttpAnnouncement(SAMPLE_PROJECT_TEST_NAME).build();

@@ -14,4 +14,10 @@
         </classes>
     </test>
 
+    <test name="FailureSample">
+        <classes>
+            <class name="com.proofpoint.sampleproject.tests.SampleFailureTest"/>
+        </classes>
+    </test>
+
 </suite>
