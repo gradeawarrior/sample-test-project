@@ -3,7 +3,6 @@ package com.proofpoint.sampleproject;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-import com.ning.http.client.AsyncHttpClient;
 import com.proofpoint.configuration.ConfigurationModule;
 import com.proofpoint.event.client.HttpEventClientConfig;
 
@@ -16,7 +15,6 @@ public class MainModule implements Module
     @Override
     public void configure(Binder binder)
     {
-        binder.bind(AsyncHttpClient.class).in(Scopes.NO_SCOPE);
         binder.bind(TestManager.class).in(Scopes.SINGLETON);
         binder.bind(TestResource.class).in(Scopes.SINGLETON);
 

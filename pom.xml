@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.proofpoint.qa</groupId>
     <artifactId>sample-project</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -11,31 +10,68 @@
     <parent>
         <groupId>com.proofpoint.platform</groupId>
         <artifactId>rest-server-base</artifactId>
-        <version>0.54</version>
-        <relativePath>../rest-server-base/pom.xml</relativePath>
+        <version>0.64</version>
     </parent>
-
-    <scm>
-        <connection>scm:git:git://yorktown.us.proofpoint.com/blobstore.git</connection>
-        <developerConnection>scm:git:ssh://git@yorktown.us.proofpoint.com/blobstore.git</developerConnection>
-    </scm>
 
     <properties>
         <main-class>com.proofpoint.sampleproject.Main</main-class>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <platform-version>0.54</platform-version>
     </properties>
 
     <dependencies>
+        <!-- Proofpoint platform -->
         <dependency>
-            <groupId>com.proofpoint.platform</groupId>
-            <artifactId>bootstrap</artifactId>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.weakref</groupId>
+            <artifactId>jmxutils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.proofpoint.platform</groupId>
-            <artifactId>cassandra-experimental</artifactId>
-            <version>${platform-version}</version>
+            <artifactId>node</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>configuration</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>bootstrap</artifactId>
         </dependency>
 
         <dependency>
@@ -50,12 +86,17 @@
 
         <dependency>
             <groupId>com.proofpoint.platform</groupId>
-            <artifactId>experimental</artifactId>
+            <artifactId>log</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.proofpoint.platform</groupId>
             <artifactId>http-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>trace-token</artifactId>
         </dependency>
 
         <dependency>
@@ -69,13 +110,13 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>jmx-http-rpc-experimental</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.google.inject.extensions</groupId>
-            <artifactId>guice-multibindings</artifactId>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>units</artifactId>
         </dependency>
 
         <dependency>
@@ -88,6 +129,16 @@
             <artifactId>jackson-core-asl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>jmx-http-experimental</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.proofpoint.platform</groupId>
+            <artifactId>http-client-experimental</artifactId>
+        </dependency>
+
         <!-- for packaging -->
         <dependency>
             <groupId>com.proofpoint.platform</groupId>
@@ -97,23 +148,19 @@
         </dependency>
 
         <!-- for testing -->
-
         <dependency>
-            <groupId>com.proofpoint.platform</groupId>
-            <artifactId>testing</artifactId>
-            <scope>test</scope>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.5</version>
+            <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.proofpoint.platform</groupId>
-            <artifactId>dbpool</artifactId>
-            <version>${platform-version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ning</groupId>
-            <artifactId>async-http-client</artifactId>
-        </dependency>
+        <!-- for testing -->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -123,42 +170,10 @@
         </dependency>
 
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <version>2.0.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>compile</scope>
-            <version>5.14.6</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
             <version>1.4.4</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>proofpoint</id>
-            <name>Proofpoint Releases</name>
-            <url>http://maven.us.proofpoint.com:8082/nexus/content/repositories/proofpoint-eng</url>
-        </repository>
-        <snapshotRepository>
-            <id>proofpoint-snapshots</id>
-            <name>Proofpoint Snapshots</name>
-            <url>http://maven.us.proofpoint.com:8082/nexus/content/repositories/proofpoint-eng-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>

@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URI;
 
 import com.google.inject.Injector;
-import com.ning.http.client.AsyncHttpClient;
 import com.proofpoint.bootstrap.Bootstrap;
 import com.proofpoint.discovery.client.Announcer;
 import com.proofpoint.discovery.client.DiscoveryClientConfig;
@@ -12,12 +11,14 @@ import com.proofpoint.discovery.client.DiscoveryModule;
 import com.proofpoint.event.client.HttpEventModule;
 import com.proofpoint.http.server.HttpServerModule;
 import com.proofpoint.jaxrs.JaxrsModule;
+import com.proofpoint.jmx.JmxHttpModule;
 import com.proofpoint.jmx.JmxModule;
 import com.proofpoint.json.JsonModule;
 import com.proofpoint.log.LogJmxModule;
 import com.proofpoint.log.Logger;
 import com.proofpoint.node.NodeConfig;
 import com.proofpoint.node.NodeModule;
+import com.proofpoint.tracetoken.TraceTokenModule;
 import org.weakref.jmx.guice.MBeanModule;
 
 /**
@@ -32,7 +33,6 @@ public class Main
     public static URI discoveryUri;
     public static String environment;
     public static TestConfigurations testConfigurations;
-    public static AsyncHttpClient asyncHttpClient;
 
     public static void main(String[] args)
             throws Exception
@@ -44,15 +44,17 @@ public class Main
             throws InterruptedException
     {
         Bootstrap app = new Bootstrap(
-                new DiscoveryModule(),
-                new HttpServerModule(),
-                new HttpEventModule(),
-                new JaxrsModule(),
-                new JmxModule(),
-                new JsonModule(),
-                new LogJmxModule(),
-                new MBeanModule(),
                 new NodeModule(),
+                new HttpServerModule(),
+                new JsonModule(),
+                new JaxrsModule(),
+                new DiscoveryModule(),
+                new MBeanModule(),
+                new JmxModule(),
+                new JmxHttpModule(),
+                new LogJmxModule(),
+                new HttpEventModule(),
+                new TraceTokenModule(),
                 new MainModule()
         );
 
@@ -64,7 +66,6 @@ public class Main
 
             discoveryUri = discoveryClientConfig.getDiscoveryServiceURI();
             environment = nodeConfig.getEnvironment();
-            asyncHttpClient = injector.getInstance(AsyncHttpClient.class);
             File testngFile = new File(testConfigurations.getTestngConfig());
 
             if (testConfigurations.getTestDaemon()) {

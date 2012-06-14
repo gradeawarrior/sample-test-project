@@ -2,12 +2,6 @@
 
 <suite name="Share API Integration Tests" verbose="1" parallel="classes" thread-count="1">
 
-    <test name="Discovery">
-        <classes>
-            <class name="com.proofpoint.sampleproject.discovery.factories.DiscoveryTestFactory"/>
-        </classes>
-    </test>
-
     <test name="Sample">
         <classes>
             <class name="com.proofpoint.sampleproject.tests.SampleTest"/>
