@@ -68,8 +68,8 @@ TEST CONFIG
 Sample Project REST API
 =======================
 
-If the server is configured to run in server mode (test.daemon = true), The test application will run as a RESTful service
-that accepts test requests.
+If the server is configured to run in server mode (test.daemon = true),
+The test application will run as a RESTful service that accepts test requests.
 
 POST /v1/test
     - Schedules a new test
